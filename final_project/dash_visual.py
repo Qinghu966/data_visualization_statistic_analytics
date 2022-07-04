@@ -12,26 +12,32 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 #read dataset
 df = pd.read_csv('dataset/winequality.csv')
 
-#less suger(median 3), high quality
+#Wine quality distribute on the amount of sugar remaining after fermentation stops
+#For most of wine, the amount of sugar are betwwen 1.8 ~ 8.1(greater than 45 grams/liter are considered sweet)
 fig1 = px.histogram(df, x = "residual sugar", y = "quality", marginal = "box", color = None, hover_data  = df.columns)
 
-#high quality, less suger, PH higher
+#Correlation between wine quality and pH and residual sugar
+# high quality, less sugar, pH higher
 fig2 = px.density_heatmap(df, x = "pH", y = "quality", z = "residual sugar", color_continuous_scale = "solar", text_auto = True)
 
-#less chlorides, higher quality
+#Correlation between wine quality and chlorides 
+#high quality wine with less amount of salt 
 fig3 = px.density_heatmap(df, x = "chlorides", y = "quality", text_auto = True, color_continuous_scale = "sunsetdark")
 
-#less suger, PH higher
-fig4 = px.scatter(df, x="residual sugar", y = "pH", color='quality', title="Floor Area VS Resale Price")
+#Correlation between pH and residual sugar based on wine quality 
+#high quality wine distribute on less suger, PH scale is on 3-4
+fig4 = px.scatter(df, x="residual sugar", y = "pH", color='quality', title="Residual Sugar & PH")
 
-#high quality, less alcohol
+#Correlation between wine quality and alcohol 
+#For most of wine,alcohol is between 8-14
 subject = df["quality"]
 score = df["alcohol"]
 data = [dict(x = subject, y = score, mode = "markers", type = "scatter",
              transforms = [dict(type = "groupby", groups = subject)])]
 fig5 = dict(data = data)
 
-#Most of wine PH 3-3.4 sulphates 0.4-0.6 alcohol 9-9.5
+# The distribution of pH and sulphates and alcohol
+# Most of wine PH 3-3.4 sulphates(contribute to sulfur dioxide gas (S02) levels,acts as an antimicrobial and antioxidant) 0.4-0.6 alcohol 9-9.5
 fig6 = px.ecdf(df, x = ["pH", "sulphates", "alcohol"], marginal = "histogram", markers = False)
 
 #fig6 = px.ecdf(df, x = "alcohol", log_x = True, log_y = True, color = "quality")
